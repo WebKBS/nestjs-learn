@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 
 @Controller('users')
 export class UsersController {
@@ -8,7 +8,8 @@ export class UsersController {
   }
 
   @Post()
-  createUser(): string {
+  createUser(@Body() request: any): string {
+    console.log(request);
     return 'User 생성되었습니다.';
   }
 }
