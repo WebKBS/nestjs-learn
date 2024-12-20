@@ -5,11 +5,13 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUsersParamDto } from './dtos/get-users-param.dto';
+import { PatchUserDto } from './dtos/patch-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -31,5 +33,11 @@ export class UsersController {
     // ValidationPipe 를 사용하면 request 에 대한 유효성 검사를 자동으로 수행
     console.log(createUserDto);
     return 'User 생성되었습니다.';
+  }
+
+  @Patch()
+  patchUser(@Body() patchUserDto: PatchUserDto) {
+    console.log(patchUserDto);
+    return 'User 수정되었습니다.';
   }
 }
