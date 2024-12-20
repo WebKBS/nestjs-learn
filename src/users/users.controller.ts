@@ -7,7 +7,9 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  ValidationPipe,
 } from '@nestjs/common';
+import { CreateUserDto } from './dtos/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -23,8 +25,9 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Body() request: any): string {
-    console.log(request);
+  createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+    // ValidationPipe 를 사용하면 request 에 대한 유효성 검사를 자동으로 수행
+    console.log(createUserDto);
     return 'User 생성되었습니다.';
   }
 }
