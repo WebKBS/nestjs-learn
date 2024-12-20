@@ -25,7 +25,7 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+  createUser(@Body() createUserDto: CreateUserDto) {
     // ValidationPipe 를 사용하면 request 에 대한 유효성 검사를 자동으로 수행
     console.log(createUserDto);
     return 'User 생성되었습니다.';
