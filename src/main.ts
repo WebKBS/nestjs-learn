@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 // bootstrap: 애플리케이션을 생성하고, 지정된 포트에서 애플리케이션을 실행하는 역할을 한다.
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // 데코레이터가 없는 속성은 자동 제거
@@ -12,6 +14,17 @@ async function bootstrap() {
       // transform: true, // 요청에서 넘어온 자료형을 원하는 자료형으로 변환
     }),
   ); // 모든 요청에 대한 유효성 검사를 수행
+
+  const config = new DocumentBuilder()
+    .setVersion('1.0') // API 문서의 버전
+    .setTitle('NestJS API') // API 문서의 제목
+    .setDescription('NestJS API 문서입니다.') // API 문서의 설명
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document); // Swagger UI를 설정
+
   await app.listen(process.env.PORT ?? 3000);
 }
+
 bootstrap().then(() => console.log('NestJS Application is running!'));
