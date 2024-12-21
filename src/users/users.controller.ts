@@ -12,20 +12,19 @@ import {
 import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUsersParamDto } from './dtos/get-users-param.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
+import { UsersService } from './providers/users.service';
 
 @Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
   @Get('/:id?') // GET /users/:id (optional) - 물음표를 붙이면 id가 있어도 없어도 됨
   getUsers(
     @Param() getUsersParamDto: GetUsersParamDto,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number, // limit 없으면 10으로 기본값 설정
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number, // page 없으면 1로 기본값 설정
-  ): string {
-    console.log(getUsersParamDto);
-    console.log(limit);
-    console.log(page);
-
-    return `id: ${getUsersParamDto.id}, limit: ${limit}, page: ${page}`;
+  ) {
+    return this.usersService.findAll(getUsersParamDto, limit, page);
   }
 
   @Post()
