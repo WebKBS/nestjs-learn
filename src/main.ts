@@ -19,6 +19,7 @@ async function bootstrap() {
     .setVersion('1.0') // API 문서의 버전
     .setTitle('NestJS API') // API 문서의 제목
     .setDescription('NestJS API 문서입니다.') // API 문서의 설명
+    .addServer('http://localhost:3000') // API 서버의 주소
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
