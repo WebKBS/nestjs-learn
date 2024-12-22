@@ -15,6 +15,6 @@ export class PostsController {
 
   @Post()
   createPost(@Body() createPostDto: CreatePostDto) {
-    return '게시글이 생성되었습니다.';
+    console.log(createPostDto);
   }
 }
