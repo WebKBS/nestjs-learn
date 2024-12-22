@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PostsService } from './providers/posts.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from '../users/dto/create-user.dto';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 @ApiTags('게시글 API')
@@ -14,7 +14,7 @@ export class PostsController {
   }
 
   @Post()
-  createPost(@Body() createPostDto: CreateUserDto) {
+  createPost(@Body() createPostDto: CreatePostDto) {
     return '게시글이 생성되었습니다.';
   }
 }

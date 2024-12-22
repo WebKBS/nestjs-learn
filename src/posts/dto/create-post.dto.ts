@@ -11,7 +11,10 @@ import {
   IsUrl,
   Matches,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
+import { CreatePostMetaOptionsDto } from './create-post-meta-options.dto';
+import { Type } from 'class-transformer';
 
 export class CreatePostDto {
   @IsString()
@@ -56,10 +59,9 @@ export class CreatePostDto {
   @MinLength(3, { each: true }) // each 옵션을 사용하여 배열의 각 요소의 최소 길이 검증
   tags?: string[];
 
-  metaOptions: [
-    {
-      key: 'sidebarEnabled';
-      value: true;
-    },
-  ];
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true }) // each 옵션을 사용하여 배열의 각 요소가 객체인지 검증
+  @Type(() => CreatePostMetaOptionsDto) // class-transformer 를 사용하여 객체로 변환
+  metaOptions: CreatePostMetaOptionsDto[];
 }
