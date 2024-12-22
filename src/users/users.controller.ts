@@ -9,9 +9,9 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { GetUsersParamDto } from './dtos/get-users-param.dto';
-import { PatchUserDto } from './dtos/patch-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { GetUsersParamDto } from './dto/get-users-param.dto';
+import { PatchUserDto } from './dto/patch-user.dto';
 import { UsersService } from './providers/users.service';
 import {
   ApiBody,

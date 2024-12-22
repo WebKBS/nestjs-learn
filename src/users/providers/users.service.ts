@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { GetUsersParamDto } from '../dtos/get-users-param.dto';
+import { GetUsersParamDto } from '../dto/get-users-param.dto';
 import { AuthService } from '../../auth/providers/auth/auth.service';
 
 @Injectable() // NestJS 에서는 @Injectable() 데코레이터를 사용하여 클래스를 서비스로 정의
