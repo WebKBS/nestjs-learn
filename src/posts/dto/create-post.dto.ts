@@ -36,7 +36,7 @@ export class CreatePostDto {
   postType: PostType;
 
   @ApiProperty({
-    example: '게시글-slug',
+    example: 'new-with-nestjs',
     description: '게시글의 slug, ex) my-post-title',
   })
   @IsString()
