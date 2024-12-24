@@ -4,7 +4,8 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
-import { TypeOrmModule } from '@nestjs/typeorm'; // module: 애플리케이션의 일부분으로, 컨트롤러와 서비스를 묶어주는 역할을 한다.
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './users/user.entity'; // module: 애플리케이션의 일부분으로, 컨트롤러와 서비스를 묶어주는 역할을 한다.
 
 // module: 애플리케이션의 일부분으로, 컨트롤러와 서비스를 묶어주는 역할을 한다.
 @Module({
@@ -32,11 +33,11 @@ import { TypeOrmModule } from '@nestjs/typeorm'; // module: 애플리케이션�
         inject: [], // useFactory 함수에 주입할 provider 들을 나열한다.
         type: 'postgres',
         host: 'localhost',
-        port: 5432,
+        port: 5433,
         username: 'postgres',
         password: 'password',
         database: 'nestjs-blog', // 데이터베이스 이름
-        entities: [], // TypeORM 이 사용할 엔티티들을 정의한다.
+        entities: [User], // TypeORM 이 사용할 엔티티들을 정의한다.
         synchronize: true, // 개발 환경에서는 true, production 환경에서는 false
       }),
     }),
