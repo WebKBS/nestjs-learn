@@ -5,7 +5,7 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/user.entity'; // module: 애플리케이션의 일부분으로, 컨트롤러와 서비스를 묶어주는 역할을 한다.
+import { Users } from './users/user.entity'; // module: 애플리케이션의 일부분으로, 컨트롤러와 서비스를 묶어주는 역할을 한다.
 
 // module: 애플리케이션의 일부분으로, 컨트롤러와 서비스를 묶어주는 역할을 한다.
 @Module({
@@ -37,7 +37,7 @@ import { User } from './users/user.entity'; // module: 애플리케이션의 일
         username: 'postgres',
         password: 'postgres',
         database: 'nestjs-blog', // 데이터베이스 이름
-        entities: [User], // TypeORM 이 사용할 엔티티들을 정의한다.
+        entities: [Users], // TypeORM 이 사용할 엔티티들을 정의한다.
         synchronize: true, // 개발 환경에서는 true, production 환경에서는 false
       }),
     }),
