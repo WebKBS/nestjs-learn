@@ -1,21 +1,35 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GetUsersParamDto } from '../dto/get-users-param.dto';
-import { AuthService } from '../../auth/providers/auth/auth.service';
+import { Repository } from 'typeorm';
+import { User } from '../user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 @Injectable() // NestJS 에서는 @Injectable() 데코레이터를 사용하여 클래스를 서비스로 정의
 export class UsersService {
   constructor(
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
+    @InjectRepository(User) // @InjectRepository() 데코레이터를 사용하여 리포지토리를 주입
+    private usersRepository: Repository<User>, // User 엔티티의 리포지토리를 주입
   ) {}
 
-  findAll(getUsersParamDto: GetUsersParamDto, limit: number, page: number) {
-    const isAuth = this.authService.isAuth();
+  public async createUser(createUserDto: CreateUserDto): Promise<User> {
+    // 사용자 이메일 중복 확인
+    const existingUser = await this.usersRepository.findOne({
+      where: { email: createUserDto.email },
+    });
 
-    if (!isAuth) {
-      return 'Not authenticated';
+    // 에러 발생 시 throw new Error('이미 사용 중인 이메일입니다.');
+    if (existingUser) {
+      throw new Error('이미 사용 중인 이메일입니다.');
     }
 
+    // 사용자 생성
+    let newUser = this.usersRepository.create(createUserDto);
+    newUser = await this.usersRepository.save(newUser);
+    return newUser;
+  }
+
+  findAll(getUsersParamDto: GetUsersParamDto, limit: number, page: number) {
     return [
       { id: 1, name: 'Alice', email: 'alice@alice.com' },
       { id: 2, name: 'Bob', email: 'bob@bob.com' },

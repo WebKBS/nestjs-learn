@@ -35,7 +35,7 @@ import { User } from './users/user.entity'; // module: 애플리케이션의 일
         host: 'localhost',
         port: 5433,
         username: 'postgres',
-        password: 'password',
+        password: 'postgres',
         database: 'nestjs-blog', // 데이터베이스 이름
         entities: [User], // TypeORM 이 사용할 엔티티들을 정의한다.
         synchronize: true, // 개발 환경에서는 true, production 환경에서는 false

@@ -76,9 +76,10 @@ export class UsersController {
       },
     },
   })
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUsers(@Body() createUserDto: CreateUserDto) {
     // ValidationPipe 를 사용하면 request 에 대한 유효성 검사를 자동으로 수행
-    console.log(createUserDto);
+
+    return this.usersService.createUser(createUserDto); // 사용자 생성
   }
 
   @Patch()
