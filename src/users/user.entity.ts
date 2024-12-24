@@ -5,15 +5,32 @@ export class User {
   @PrimaryGeneratedColumn() // PrimaryGeneratedColumn 데코레이터는 엔티티의 기본 키를 생성한다.
   id: number;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 96,
+    nullable: false,
+  })
   firstName: string;
 
-  @Column({ nullable: true })
+  @Column({
+    type: 'varchar',
+    length: 96,
+    nullable: true,
+  })
   lastName: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 96,
+    nullable: false,
+    unique: true,
+  })
   email: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 96,
+    nullable: false,
+  })
   password: string;
 }
