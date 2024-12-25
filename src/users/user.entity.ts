@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Posts } from '../posts/posts.entity';
 
 @Entity()
 export class Users {
@@ -33,4 +34,7 @@ export class Users {
     nullable: false,
   })
   password: string;
+
+  @OneToMany(() => Posts, (post) => post.author) // Posts 엔티티와 일대다 관계를 설정한다.
+  posts: Posts[];
 }

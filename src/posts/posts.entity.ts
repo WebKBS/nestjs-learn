@@ -1,7 +1,14 @@
 import { PostType } from './enums/postType.enum';
 import { PostStatus } from './enums/postStatus.enum';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { MetaOptions } from '../meta-options/meta-options.entity';
+import { Users } from '../users/user.entity';
 
 @Entity()
 export class Posts {
@@ -63,6 +70,9 @@ export class Posts {
     nullable: true,
   })
   publishOn?: Date;
+
+  @ManyToOne(() => Users, (user) => user.posts)
+  author: Users;
 
   tags?: string[];
 
