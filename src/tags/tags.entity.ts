@@ -49,7 +49,9 @@ export class Tags {
   })
   featuredImageUrl?: string;
 
-  @ManyToMany(() => Posts, (post) => post.tags)
+  @ManyToMany(() => Posts, (post) => post.tags, {
+    onDelete: 'CASCADE', // post 삭제 시 tags 도 같이 삭제
+  })
   posts: Posts[];
 
   @CreateDateColumn()
