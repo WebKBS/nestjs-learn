@@ -6,6 +6,7 @@ import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from './users/user.entity'; // module: 애플리케이션의 일부분으로, 컨트롤러와 서비스를 묶어주는 역할을 한다.
+import { TagsModule } from './tags/tags.module';
 
 // module: 애플리케이션의 일부분으로, 컨트롤러와 서비스를 묶어주는 역할을 한다.
 @Module({
@@ -41,6 +42,7 @@ import { Users } from './users/user.entity'; // module: 애플리케이션의 �
         synchronize: true, // 개발 환경에서는 true, production 환경에서는 false
       }),
     }),
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
