@@ -18,7 +18,7 @@ export class PostsController {
   @ApiResponse({ status: 201, description: '게시글 생성 성공' }) // Swagger 문서에 표시되는 응답 상태 코드
   @Post()
   createPost(@Body() createPostDto: CreatePostDto) {
-    console.log(createPostDto);
+    return this.postsService.create(createPostDto);
   }
 
   @ApiOperation({ summary: '게시글 업데이트' }) // Swagger 문서에 표시되는 요약

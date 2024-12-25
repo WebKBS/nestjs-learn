@@ -102,27 +102,20 @@ export class CreatePostDto {
   tags?: string[];
 
   @ApiPropertyOptional({
-    type: 'array',
     required: false,
     items: {
       type: 'object',
       properties: {
-        key: {
-          type: 'string',
-          description: '메타 키',
-          example: 'sidebarEnabled',
-        },
-        value: {
-          type: 'string',
-          description: '메타 값',
-          example: 'true',
+        metaValue: {
+          type: 'json',
+          description: '메타 옵션 JSON 값',
+          example: '{ "sidebarEnabled": "true" }',
         },
       },
     },
   })
   @IsOptional()
-  @IsArray()
   @ValidateNested({ each: true }) // each 옵션을 사용하여 배열의 각 요소가 객체인지 검증
   @Type(() => CreatePostMetaOptionsDto) // class-transformer 를 사용하여 객체로 변환
-  metaOptions: CreatePostMetaOptionsDto[];
+  metaOptions: CreatePostMetaOptionsDto | null;
 }
