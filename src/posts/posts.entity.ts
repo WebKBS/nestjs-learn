@@ -86,7 +86,7 @@ export class Posts {
   // @JoinColumn() // JoinColumn 데코레이터는 외래 키를 지정한다.
   metaOptions: MetaOptions;
 
-  @ManyToMany(() => Tags, {
+  @ManyToMany(() => Tags, (tag) => tag.posts, {
     eager: true, // Posts 엔티티를 가져올 때 Tags 엔티티도 함께 가져온다.
   })
   @JoinTable() // JoinTable 데코레이터는 다대다 관계에서 연결 테이블을 지정한다.
