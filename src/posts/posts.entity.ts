@@ -65,5 +65,5 @@ export class Posts {
 
   tags?: string[];
 
-  metaOptions?: CreatePostMetaOptionsDto;
+  metaOptions?: CreatePostMetaOptionsDto[];
 }
