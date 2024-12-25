@@ -71,7 +71,9 @@ export class Posts {
   })
   publishOn?: Date;
 
-  @ManyToOne(() => Users, (user) => user.posts)
+  @ManyToOne(() => Users, (user) => user.posts, {
+    eager: true, // Posts 엔티티를 가져올 때 Users 엔티티도 함께 가져온다.
+  })
   author: Users;
 
   tags?: string[];

@@ -36,7 +36,9 @@ export class PostsService {
   }
 
   async findAll(userId: string) {
-    return await this.postsRepository.find();
+    return await this.postsRepository.find({
+      relations: ['author', 'metaOptions'], // author와 metaOptions를 가져온다
+    });
   }
 
   async delete(id: number) {
