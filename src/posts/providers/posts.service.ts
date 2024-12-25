@@ -29,14 +29,23 @@ export class PostsService {
   }
 
   async delete(id: number) {
-    // post 찾기
+    // // post 찾기
     let post = await this.postsRepository.findOneBy({ id: id });
+    //
+    // // post 삭제
+    // await this.postsRepository.delete(id);
+    //
+    // // metaOptions 삭제
+    // await this.metaOptionsRepository.delete(post.metaOptions.id);
 
-    // post 삭제
-    await this.postsRepository.delete(id);
+    let inversePost = await this.metaOptionsRepository.find({
+      where: { id: post.metaOptions.id },
+      relations: {
+        posts: true,
+      },
+    });
 
-    // metaOptions 삭제
-    await this.metaOptionsRepository.delete(post.metaOptions.id);
+    console.log(inversePost);
 
     return { deleted: true, id: id };
   }

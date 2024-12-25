@@ -10,7 +10,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // 데코레이터가 없는 속성은 자동 제거
-      // forbidNonWhitelisted: true, // 데코레이터가 없는 속성이 있을 경우 요청을 막음
+      forbidNonWhitelisted: true, // 데코레이터가 없는 속성이 있을 경우 요청을 막음
       // transform: true, // 요청에서 넘어온 자료형을 원하는 자료형으로 변환
     }),
   ); // 모든 요청에 대한 유효성 검사를 수행

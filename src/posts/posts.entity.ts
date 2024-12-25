@@ -62,7 +62,7 @@ export class Posts {
     length: 1024,
     nullable: true,
   })
-  featuredImage?: string;
+  featuredImageUrl?: string;
 
   @Column({
     type: 'timestamp',
@@ -72,7 +72,7 @@ export class Posts {
 
   tags?: string[];
 
-  @OneToOne(() => MetaOptions, {
+  @OneToOne(() => MetaOptions, (metaOptions) => metaOptions.posts, {
     cascade: true, // MetaOptions 엔티티와 함께 저장 및 업데이트
     eager: true, // Posts 엔티티를 가져올 때 MetaOptions 엔티티도 함께 가져온다.
   }) // MetaOptions 엔티티와 일대일 관계 설정

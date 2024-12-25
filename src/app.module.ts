@@ -39,8 +39,8 @@ import { MetaOptionsModule } from './meta-options/meta-options.module';
         password: 'postgres',
         database: 'nestjs-blog', // 데이터베이스 이름
         // entities: [Users], // TypeORM 이 사용할 엔티티들을 정의한다.
-        synchronize: true, // 개발 환경에서는 true, production 환경에서는 false
         autoLoadEntities: true, // TypeORM 이 엔티티들을 자동으로 로드하도록 설정한다.
+        synchronize: true, // 개발 환경에서는 true, production 환경에서는 false
       }),
     }),
     TagsModule,
