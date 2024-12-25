@@ -24,20 +24,11 @@ export class PostsService {
     return await this.postsRepository.save(post);
   }
 
-  findAll(userId: string) {
+  async findAll(userId: string) {
     const user = this.usersService.findOneById(userId);
 
-    return [
-      {
-        user: user,
-        title: 'Post 1',
-        content: 'This is post 1',
-      },
-      {
-        user: user,
-        title: 'Post 2',
-        content: 'This is post 2',
-      },
-    ];
+    let posts = await this.postsRepository.find();
+
+    return posts;
   }
 }
