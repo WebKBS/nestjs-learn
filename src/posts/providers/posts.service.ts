@@ -4,7 +4,7 @@ import { CreatePostDto } from '../dto/create-post.dto';
 import { Repository } from 'typeorm';
 import { Posts } from '../posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MetaOptions } from '../../meta-options/meta-options.entity';
+import { TagsService } from '../../tags/providers/tags.service';
 
 @Injectable()
 export class PostsService {
@@ -13,13 +13,18 @@ export class PostsService {
     // TypeORM Repository를 주입합니다.
     @InjectRepository(Posts)
     private postsRepository: Repository<Posts>,
-    @InjectRepository(MetaOptions)
-    private metaOptionsRepository: Repository<MetaOptions>,
+    // @InjectRepository(MetaOptions)
+    // private metaOptionsRepository: Repository<MetaOptions>,
+
+    private tagsService: TagsService,
   ) {}
 
   async create(@Body() createPostDto: CreatePostDto) {
     //userId를 기반으로 데이터베이스에서 작성자 찾기
     let author = await this.usersService.findOneById(createPostDto.authorId);
+
+    // tags를 기반으로 데이터베이스에서 태그 찾기
+    let tags = await this.tagsService.findMultipleTags(createPostDto.tags);
 
     // 작성자가 없으면 에러 발생
     if (!author) {
@@ -30,6 +35,7 @@ export class PostsService {
     let post = this.postsRepository.create({
       ...createPostDto,
       author: author,
+      tags: tags,
     });
 
     return await this.postsRepository.save(post);

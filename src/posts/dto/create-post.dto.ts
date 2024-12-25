@@ -93,14 +93,13 @@ export class CreatePostDto {
   publishOn?: Date;
 
   @ApiPropertyOptional({
-    description: '게시글의 태그는 배열(string) 형식으로 입력해주세요.',
-    example: ['tag1', 'tag2'],
+    description: '게시글의 태그 ID 배열',
+    example: [1, 2],
   })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true }) // each 옵션을 사용하여 배열의 각 요소가 string 타입인지 검증
-  @MinLength(3, { each: true }) // each 옵션을 사용하여 배열의 각 요소의 최소 길이 검증
-  tags?: string[];
+  @IsInt({ each: true }) // each 옵션을 사용하여 배열의 각 요소가 string 타입인지 검증
+  tags?: number[];
 
   @ApiPropertyOptional({
     required: false,

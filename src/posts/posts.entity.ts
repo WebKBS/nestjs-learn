@@ -3,12 +3,15 @@ import { PostStatus } from './enums/postStatus.enum';
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { MetaOptions } from '../meta-options/meta-options.entity';
 import { Users } from '../users/user.entity';
+import { Tags } from '../tags/tags.entity';
 
 @Entity()
 export class Posts {
@@ -76,12 +79,14 @@ export class Posts {
   })
   author: Users;
 
-  tags?: string[];
-
   @OneToOne(() => MetaOptions, (metaOptions) => metaOptions.posts, {
     cascade: true, // MetaOptions 엔티티와 함께 저장 및 업데이트
     eager: true, // Posts 엔티티를 가져올 때 MetaOptions 엔티티도 함께 가져온다.
   }) // MetaOptions 엔티티와 일대일 관계 설정
   // @JoinColumn() // JoinColumn 데코레이터는 외래 키를 지정한다.
   metaOptions: MetaOptions;
+
+  @ManyToMany(() => Tags)
+  @JoinTable() // JoinTable 데코레이터는 다대다 관계에서 연결 테이블을 지정한다.
+  tags?: Tags[];
 }
