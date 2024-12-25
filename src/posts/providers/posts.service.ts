@@ -18,21 +18,8 @@ export class PostsService {
   ) {}
 
   async create(@Body() createPostDto: CreatePostDto) {
-    // metaOptions 생성
-    let metaOptions = createPostDto.metaOptions
-      ? this.metaOptionsRepository.create(createPostDto.metaOptions)
-      : null;
-
-    if (metaOptions) {
-      await this.metaOptionsRepository.save(metaOptions);
-    }
-
-    // post 생성
+    // post 생성 - cascade 설정으로 metaOptions 도 같이 생성된다
     let post = this.postsRepository.create(createPostDto);
-
-    if (metaOptions) {
-      post.metaOptions = metaOptions;
-    }
 
     return await this.postsRepository.save(post);
   }

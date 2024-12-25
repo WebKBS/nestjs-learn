@@ -72,7 +72,9 @@ export class Posts {
 
   tags?: string[];
 
-  @OneToOne(() => MetaOptions) // MetaOptions 엔티티와 일대일 관계 설정
+  @OneToOne(() => MetaOptions, {
+    cascade: true, // MetaOptions 엔티티와 함께 저장 및 업데이트
+  }) // MetaOptions 엔티티와 일대일 관계 설정
   @JoinColumn() // JoinColumn 데코레이터는 외래 키를 지정한다.
   metaOptions: MetaOptions;
 }
