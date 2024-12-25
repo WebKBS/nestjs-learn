@@ -18,8 +18,19 @@ export class PostsService {
   ) {}
 
   async create(@Body() createPostDto: CreatePostDto) {
+    //userId를 기반으로 데이터베이스에서 작성자 찾기
+    let author = await this.usersService.findOneById(createPostDto.authorId);
+
+    // 작성자가 없으면 에러 발생
+    if (!author) {
+      throw new Error('작성자를 찾을 수 없습니다.');
+    }
+
     // post 생성 - cascade 설정으로 metaOptions 도 같이 생성된다
-    let post = this.postsRepository.create(createPostDto);
+    let post = this.postsRepository.create({
+      ...createPostDto,
+      author: author,
+    });
 
     return await this.postsRepository.save(post);
   }
