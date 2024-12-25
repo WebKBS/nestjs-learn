@@ -25,10 +25,19 @@ export class PostsService {
   }
 
   async findAll(userId: string) {
-    const user = this.usersService.findOneById(userId);
+    return await this.postsRepository.find();
+  }
 
-    let posts = await this.postsRepository.find();
+  async delete(id: number) {
+    // post 찾기
+    let post = await this.postsRepository.findOneBy({ id: id });
 
-    return posts;
+    // post 삭제
+    await this.postsRepository.delete(id);
+
+    // metaOptions 삭제
+    await this.metaOptionsRepository.delete(post.metaOptions.id);
+
+    return { deleted: true, id: id };
   }
 }

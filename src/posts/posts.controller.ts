@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { PostsService } from './providers/posts.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -26,5 +36,12 @@ export class PostsController {
   @Patch(':id')
   updatePost(@Param('id') id: string, @Body() updatePostDto: PatchPostDto) {
     console.log(id, updatePostDto);
+  }
+
+  @ApiOperation({ summary: '게시글 삭제' }) // Swagger 문서에 표시되는 요약
+  @ApiResponse({ status: 200, description: '게시글 삭제 성공' }) // Swagger 문서에 표시되는 응답 상태 코드
+  @Delete()
+  deletePost(@Query('id', ParseIntPipe) id: number) {
+    return this.postsService.delete(id);
   }
 }
