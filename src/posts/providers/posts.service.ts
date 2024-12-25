@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Posts } from '../posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TagsService } from '../../tags/providers/tags.service';
+import { PatchPostDto } from '../dto/patch-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -16,7 +17,7 @@ export class PostsService {
     // @InjectRepository(MetaOptions)
     // private metaOptionsRepository: Repository<MetaOptions>,
 
-    private tagsService: TagsService,
+    private readonly tagsService: TagsService,
   ) {}
 
   async create(@Body() createPostDto: CreatePostDto) {
@@ -45,6 +46,30 @@ export class PostsService {
     return await this.postsRepository.find({
       // relations: ['author', 'metaOptions', 'tags'], // author, metaOptions, tags를 가져온다
     });
+  }
+
+  public async update(patchPostDto: PatchPostDto) {
+    // tags 찾기
+    const tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
+    // post 찾기
+    const post = await this.postsRepository.findOneBy({
+      id: patchPostDto.id,
+    });
+    // post 업데이트
+    post.title = patchPostDto.title ?? post.title; // {...post, ...patchPostDto} 를 사용하면 undefined 값이 들어가게 된다.
+    post.content = patchPostDto.content ?? post.content;
+    post.status = patchPostDto.status ?? post.status;
+    post.postType = patchPostDto.postType ?? post.postType;
+    post.slug = patchPostDto.slug ?? post.slug;
+    post.featuredImageUrl =
+      patchPostDto.featuredImageUrl ?? post.featuredImageUrl;
+    post.publishOn = patchPostDto.publishOn ?? post.publishOn;
+
+    // new tags 추가
+    post.tags = tags;
+
+    // post 저장
+    return await this.postsRepository.save(post);
   }
 
   async delete(id: number) {

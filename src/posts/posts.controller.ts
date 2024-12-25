@@ -33,9 +33,9 @@ export class PostsController {
 
   @ApiOperation({ summary: '게시글 업데이트' }) // Swagger 문서에 표시되는 요약
   @ApiResponse({ status: 200, description: '게시글 업데이트 성공' }) // Swagger 문서에 표시되는 응답 상태 코드
-  @Patch(':id')
-  updatePost(@Param('id') id: string, @Body() updatePostDto: PatchPostDto) {
-    console.log(id, updatePostDto);
+  @Patch()
+  updatePost(@Body() updatePostDto: PatchPostDto) {
+    return this.postsService.update(updatePostDto);
   }
 
   @ApiOperation({ summary: '게시글 삭제' }) // Swagger 문서에 표시되는 요약
