@@ -1,7 +1,13 @@
 import { PostType } from './enums/postType.enum';
 import { PostStatus } from './enums/postStatus.enum';
-import { CreatePostMetaOptionsDto } from '../meta-options/dto/create-post-meta-options.dto';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { MetaOptions } from '../meta-options/meta-options.entity';
 
 @Entity()
 export class Posts {
@@ -66,5 +72,7 @@ export class Posts {
 
   tags?: string[];
 
-  metaOptions?: CreatePostMetaOptionsDto[];
+  @OneToOne(() => MetaOptions) // MetaOptions 엔티티와 일대일 관계 설정
+  @JoinColumn() // JoinColumn 데코레이터는 외래 키를 지정한다.
+  metaOptions: MetaOptions;
 }
