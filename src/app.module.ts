@@ -7,6 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagsModule } from './tags/tags.module';
 import { MetaOptionsModule } from './meta-options/meta-options.module';
+import { ConfigModule } from '@nestjs/config'; // module: 애플리케이션의 일부분으로, 컨트롤러와 서비스를 묶어주는 역할을 한다.
+
+const ENV = process.env.NODE_ENV;
+console.log(ENV);
 
 // module: 애플리케이션의 일부분으로, 컨트롤러와 서비스를 묶어주는 역할을 한다.
 @Module({
@@ -14,6 +18,10 @@ import { MetaOptionsModule } from './meta-options/meta-options.module';
     UsersModule,
     PostsModule,
     AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: !ENV ? '.env' : `.env.${ENV}`, // 환경 변수 파일 경로
+    }),
     TypeOrmModule.forRootAsync({
       imports: [], // 다른 모듈을 가져올 때 사용한다.
       inject: [], // useFactory 함수에 주입할 provider 들을 나열한다.
