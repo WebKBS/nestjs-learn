@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { GetUsersParamDto } from '../dto/get-users-param.dto';
 import { Repository } from 'typeorm';
 import { Users } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { ConfigService } from '@nestjs/config';
+import { ConfigType } from '@nestjs/config';
+import profileConfig from '../config/profile.config';
 
 @Injectable() // NestJS 에서는 @Injectable() 데코레이터를 사용하여 클래스를 서비스로 정의
 export class UsersService {
@@ -12,8 +13,8 @@ export class UsersService {
     @InjectRepository(Users) // @InjectRepository() 데코레이터를 사용하여 리포지토리를 주입
     private usersRepository: Repository<Users>, // User 엔티티의 리포지토리를 주입
 
-    // ConfigService 주입
-    private readonly configService: ConfigService,
+    @Inject(profileConfig.KEY)
+    private readonly profileConfiguration: ConfigType<typeof profileConfig>,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto): Promise<Users> {
@@ -34,8 +35,7 @@ export class UsersService {
   }
 
   findAll(getUsersParamDto: GetUsersParamDto, limit: number, page: number) {
-    const environment = this.configService.get<string>('DATABASE_NAME');
-    console.log(environment);
+    console.log(this.profileConfiguration);
 
     return [
       { id: 1, name: 'Alice', email: 'alice@alice.com' },
