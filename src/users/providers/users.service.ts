@@ -34,7 +34,7 @@ export class UsersService {
   }
 
   findAll(getUsersParamDto: GetUsersParamDto, limit: number, page: number) {
-    const environment = this.configService.get<string>('S3_BUCKET');
+    const environment = this.configService.get<string>('DATABASE_NAME');
     console.log(environment);
 
     return [
