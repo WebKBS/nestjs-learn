@@ -10,6 +10,7 @@ import { MetaOptionsModule } from './meta-options/meta-options.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
+import environmentValidation from './config/environment.validation';
 
 const ENV = process.env.NODE_ENV;
 console.log(ENV);
@@ -24,6 +25,7 @@ console.log(ENV);
       isGlobal: true,
       envFilePath: !ENV ? '.env' : `.env.${ENV}`, // 환경 변수 파일 경로
       load: [appConfig, databaseConfig], // appConfig 함수를 ConfigModule.forRoot 함수에 전달한다.
+      validationSchema: environmentValidation,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule], // 다른 모듈을 가져올 때 사용한다.
