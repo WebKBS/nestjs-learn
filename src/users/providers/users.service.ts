@@ -47,7 +47,14 @@ export class UsersService {
 
     // 사용자 생성
     let newUser = this.usersRepository.create(createUserDto);
-    newUser = await this.usersRepository.save(newUser);
+
+    try {
+      newUser = await this.usersRepository.save(newUser);
+    } catch (error) {
+      throw new RequestTimeoutException('요청 시간이 초과되었습니다.', {
+        description: '요청 시간이 초과되었습니다.',
+      });
+    }
     return newUser;
   }
 
@@ -62,6 +69,20 @@ export class UsersService {
   }
 
   async findOneById(id: number) {
-    return await this.usersRepository.findOneBy({ id: id });
+    let user: undefined | Users;
+
+    try {
+      user = await this.usersRepository.findOneBy({ id: id });
+    } catch (error) {
+      throw new RequestTimeoutException('요청 시간이 초과되었습니다.', {
+        description: '요청 시간이 초과되었습니다.',
+      });
+    }
+
+    if (!user) {
+      throw new BadRequestException('사용자를 찾을 수 없습니다.');
+    }
+
+    return user;
   }
 }
