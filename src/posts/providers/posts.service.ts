@@ -1,4 +1,8 @@
-import { Body, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { UsersService } from '../../users/providers/users.service';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { Repository } from 'typeorm';
@@ -20,7 +24,7 @@ export class PostsService {
     private readonly tagsService: TagsService,
   ) {}
 
-  async create(@Body() createPostDto: CreatePostDto) {
+  async create(createPostDto: CreatePostDto) {
     //userId를 기반으로 데이터베이스에서 작성자 찾기
     let author = await this.usersService.findOneById(createPostDto.authorId);
 
@@ -49,12 +53,33 @@ export class PostsService {
   }
 
   public async update(patchPostDto: PatchPostDto) {
+    let tags = undefined;
+    let post = undefined;
+
     // tags 찾기
-    const tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
+    try {
+      tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
+    } catch (error) {
+      throw new RequestTimeoutException('요청 시간이 초과되었습니다.');
+    }
+
+    if (!tags || tags.length !== patchPostDto.tags.length) {
+      throw new BadRequestException('태그를 찾을 수 없습니다.');
+    }
+
     // post 찾기
-    const post = await this.postsRepository.findOneBy({
-      id: patchPostDto.id,
-    });
+    try {
+      post = await this.postsRepository.findOneBy({
+        id: patchPostDto.id,
+      });
+    } catch (error) {
+      throw new RequestTimeoutException('요청 시간이 초과되었습니다.');
+    }
+
+    if (!post) {
+      throw new BadRequestException('포스트를 찾을 수 없습니다.');
+    }
+
     // post 업데이트
     post.title = patchPostDto.title ?? post.title; // {...post, ...patchPostDto} 를 사용하면 undefined 값이 들어가게 된다.
     post.content = patchPostDto.content ?? post.content;
@@ -69,7 +94,13 @@ export class PostsService {
     post.tags = tags;
 
     // post 저장
-    return await this.postsRepository.save(post);
+    try {
+      post = await this.postsRepository.save(post);
+    } catch (error) {
+      throw new RequestTimeoutException('요청 시간이 초과되었습니다.');
+    }
+
+    return post;
   }
 
   async delete(id: number) {
