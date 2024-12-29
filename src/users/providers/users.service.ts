@@ -7,7 +7,7 @@ import {
   RequestTimeoutException,
 } from '@nestjs/common';
 import { GetUsersParamDto } from '../dto/get-users-param.dto';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Users } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -22,6 +22,8 @@ export class UsersService {
 
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
+    // Inject Datasource
+    private readonly dataSource: DataSource, // DATASOURCE 는 데이터베이스 연결을 나타내는 DataSource 인터페이스의 인스턴스
   ) {}
 
   public async createUser(createUserDto: CreateUserDto): Promise<Users> {
@@ -92,5 +94,34 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  async createMany(createUsersDto: CreateUserDto[]) {
+    let newUsers: Users[] = [];
+    // 트랜잭션을 사용하여 여러 사용자 생성
+
+    // queryRunner 는 데이터베이스 쿼리를 실행하는 데 사용
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect(); // 데이터베이스 연결
+
+    await queryRunner.startTransaction(); // 트랜잭션 시작
+
+    try {
+      for (let user of createUsersDto) {
+        let newUser = queryRunner.manager.create(Users, user);
+        let result = await queryRunner.manager.save(newUser);
+        newUsers.push(result);
+      }
+
+      await queryRunner.commitTransaction(); // 트랜잭션 커밋
+    } catch (error) {
+      await queryRunner.rollbackTransaction(); // 트랜잭션 롤백
+      throw new RequestTimeoutException('요청 시간이 초과되었습니다.', {
+        description: '요청 시간이 초과되었습니다.',
+      });
+    } finally {
+      await queryRunner.release(); // queryRunner 해제
+    }
   }
 }
