@@ -1,4 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { GetUsersParamDto } from '../dto/get-users-param.dto';
 import { Repository } from 'typeorm';
 import { Users } from '../user.entity';
@@ -18,10 +23,22 @@ export class UsersService {
   ) {}
 
   public async createUser(createUserDto: CreateUserDto): Promise<Users> {
+    let existingUser: undefined | Users;
     // 사용자 이메일 중복 확인
-    const existingUser = await this.usersRepository.findOne({
-      where: { email: createUserDto.email },
-    });
+
+    try {
+      existingUser = await this.usersRepository.findOne({
+        where: { email: createUserDto.email },
+      });
+    } catch (error) {
+      throw new RequestTimeoutException('요청 시간이 초과되었습니다.', {
+        description: '요청 시간이 초과되었습니다.',
+      });
+    }
+
+    if (existingUser) {
+      throw new BadRequestException('이미 사용 중인 이메일입니다.');
+    }
 
     // 에러 발생 시 throw new Error('이미 사용 중인 이메일입니다.');
     if (existingUser) {
