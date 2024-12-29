@@ -20,6 +20,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { CreateManyUsersDto } from './dto/create-many-users.dto';
 
 @Controller('users')
 @ApiTags('사용자 API')
@@ -80,6 +81,16 @@ export class UsersController {
     // ValidationPipe 를 사용하면 request 에 대한 유효성 검사를 자동으로 수행
 
     return this.usersService.createUser(createUserDto); // 사용자 생성
+  }
+
+  @Post('create-many')
+  @ApiOperation({ summary: '여러 사용자 생성' })
+  @ApiResponse({
+    status: 201,
+    description: '성공',
+  })
+  createManyUsers(@Body() createManyUsersDto: CreateManyUsersDto) {
+    return this.usersService.createMany(createManyUsersDto); // 여러 사용자 생성
   }
 
   @Patch()

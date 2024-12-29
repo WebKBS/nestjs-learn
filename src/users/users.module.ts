@@ -4,11 +4,12 @@ import { UsersService } from './providers/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from './user.entity';
 import { ConfigModule } from '@nestjs/config';
+import { UsersCreateManyProvider } from './providers/users-create-many.provider';
 import profileConfig from './config/profile.config';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, UsersCreateManyProvider],
   exports: [UsersService], // 다른 모듈에서 UsersService 를 사용할 수 있도록 내보냅니다.
   imports: [
     TypeOrmModule.forFeature([Users]),

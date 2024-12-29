@@ -7,12 +7,14 @@ import {
   RequestTimeoutException,
 } from '@nestjs/common';
 import { GetUsersParamDto } from '../dto/get-users-param.dto';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Users } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
+import { UsersCreateManyProvider } from './users-create-many.provider';
+import { CreateManyUsersDto } from '../dto/create-many-users.dto';
 
 @Injectable() // NestJS 에서는 @Injectable() 데코레이터를 사용하여 클래스를 서비스로 정의
 export class UsersService {
@@ -23,7 +25,8 @@ export class UsersService {
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
     // Inject Datasource
-    private readonly dataSource: DataSource, // DATASOURCE 는 데이터베이스 연결을 나타내는 DataSource 인터페이스의 인스턴스
+
+    private readonly usersCreateManyProvider: UsersCreateManyProvider,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto): Promise<Users> {
@@ -96,31 +99,7 @@ export class UsersService {
     return user;
   }
 
-  async createMany(createUsersDto: CreateUserDto[]): Promise<Users[]> {
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    await queryRunner.connect(); // 데이터베이스 연결
-    await queryRunner.startTransaction(); // 트랜잭션 시작
-
-    const newUsers: Users[] = [];
-
-    try {
-      for (const userDto of createUsersDto) {
-        const newUser = queryRunner.manager.create(Users, userDto); // 엔티티 생성
-        const savedUser = await queryRunner.manager.save(newUser); // 엔티티 저장
-        newUsers.push(savedUser);
-      }
-
-      await queryRunner.commitTransaction(); // 트랜잭션 커밋
-      return newUsers; // 생성된 사용자 목록 반환
-    } catch (error) {
-      await queryRunner.rollbackTransaction(); // 트랜잭션 롤백
-      throw new BadRequestException('사용자 생성 중 문제가 발생했습니다.', {
-        cause: error,
-        description: error.message,
-      });
-    } finally {
-      await queryRunner.release(); // queryRunner 해제
-    }
+  async createMany(createManyUsersDto: CreateManyUsersDto): Promise<Users[]> {
+    return await this.usersCreateManyProvider.createMany(createManyUsersDto);
   }
 }
