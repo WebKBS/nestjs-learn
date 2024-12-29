@@ -96,29 +96,28 @@ export class UsersService {
     return user;
   }
 
-  async createMany(createUsersDto: CreateUserDto[]) {
-    let newUsers: Users[] = [];
-    // 트랜잭션을 사용하여 여러 사용자 생성
-
-    // queryRunner 는 데이터베이스 쿼리를 실행하는 데 사용
+  async createMany(createUsersDto: CreateUserDto[]): Promise<Users[]> {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect(); // 데이터베이스 연결
-
     await queryRunner.startTransaction(); // 트랜잭션 시작
 
+    const newUsers: Users[] = [];
+
     try {
-      for (let user of createUsersDto) {
-        let newUser = queryRunner.manager.create(Users, user);
-        let result = await queryRunner.manager.save(newUser);
-        newUsers.push(result);
+      for (const userDto of createUsersDto) {
+        const newUser = queryRunner.manager.create(Users, userDto); // 엔티티 생성
+        const savedUser = await queryRunner.manager.save(newUser); // 엔티티 저장
+        newUsers.push(savedUser);
       }
 
       await queryRunner.commitTransaction(); // 트랜잭션 커밋
+      return newUsers; // 생성된 사용자 목록 반환
     } catch (error) {
       await queryRunner.rollbackTransaction(); // 트랜잭션 롤백
-      throw new RequestTimeoutException('요청 시간이 초과되었습니다.', {
-        description: '요청 시간이 초과되었습니다.',
+      throw new BadRequestException('사용자 생성 중 문제가 발생했습니다.', {
+        cause: error,
+        description: error.message,
       });
     } finally {
       await queryRunner.release(); // queryRunner 해제
