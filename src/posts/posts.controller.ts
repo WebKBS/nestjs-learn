@@ -13,6 +13,7 @@ import { PostsService } from './providers/posts.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PatchPostDto } from './dto/patch-post.dto';
+import { GetPostsDto } from './dto/get-posts.dto';
 
 @Controller('posts')
 @ApiTags('게시글 API')
@@ -20,7 +21,8 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get(':userId?')
-  getPosts(@Param('userId') userId: string) {
+  getPosts(@Param('userId') userId: string, @Query() postQuery: GetPostsDto) {
+    console.log(postQuery);
     return this.postsService.findAll(userId);
   }
 
