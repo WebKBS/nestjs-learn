@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   RequestTimeoutException,
@@ -59,13 +61,19 @@ export class UsersService {
   }
 
   findAll(getUsersParamDto: GetUsersParamDto, limit: number, page: number) {
-    console.log(this.profileConfiguration);
-
-    return [
-      { id: 1, name: 'Alice', email: 'alice@alice.com' },
-      { id: 2, name: 'Bob', email: 'bob@bob.com' },
-      { id: 3, name: 'Chris', email: 'chris@chris.com' },
-    ];
+    throw new HttpException(
+      {
+        status: HttpStatus.MOVED_PERMANENTLY,
+        error: '이 엔드포인트는 더 이상 사용되지 않습니다.',
+        fileName: 'users.service.ts',
+        lineNumber: 64,
+      },
+      HttpStatus.MOVED_PERMANENTLY,
+      {
+        cause: new Error(),
+        description: '이 엔드포인트는 더 이상 사용되지 않습니다.',
+      },
+    );
   }
 
   async findOneById(id: number) {
