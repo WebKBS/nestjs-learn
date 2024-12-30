@@ -1,17 +1,14 @@
-import {
-  BadRequestException,
-  Injectable,
-  RequestTimeoutException,
-} from '@nestjs/common';
-import { UsersService } from '../../users/providers/users.service';
-import { CreatePostDto } from '../dto/create-post.dto';
-import { Repository } from 'typeorm';
-import { Posts } from '../posts.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { TagsService } from '../../tags/providers/tags.service';
-import { PatchPostDto } from '../dto/patch-post.dto';
-import { GetPostsDto } from '../dto/get-posts.dto';
-import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
+import {BadRequestException, Injectable, RequestTimeoutException,} from '@nestjs/common';
+import {UsersService} from '../../users/providers/users.service';
+import {CreatePostDto} from '../dto/create-post.dto';
+import {Repository} from 'typeorm';
+import {Posts} from '../posts.entity';
+import {InjectRepository} from '@nestjs/typeorm';
+import {TagsService} from '../../tags/providers/tags.service';
+import {PatchPostDto} from '../dto/patch-post.dto';
+import {GetPostsDto} from '../dto/get-posts.dto';
+import {PaginationProvider} from '../../common/pagination/providers/pagination.provider';
+import {Paginated} from "../../common/pagination/interfaces/paginated.interface";
 
 @Injectable()
 export class PostsService {
@@ -26,7 +23,8 @@ export class PostsService {
     private readonly tagsService: TagsService,
     // pagination provider 주입
     private readonly paginationProvider: PaginationProvider,
-  ) {}
+  ) {
+  }
 
   async create(createPostDto: CreatePostDto) {
     //userId를 기반으로 데이터베이스에서 작성자 찾기
@@ -50,7 +48,7 @@ export class PostsService {
     return await this.postsRepository.save(post);
   }
 
-  async findAll(postQuery: GetPostsDto, userId: string) {
+  async findAll(postQuery: GetPostsDto, userId: string): Promise<Paginated<Posts>> {
     return await this.paginationProvider.paginatedQuery(
       {
         page: postQuery.page,
@@ -121,6 +119,6 @@ export class PostsService {
     // // metaOptions 삭제
     // await this.metaOptionsRepository.delete(post.metaOptions.id);
 
-    return { deleted: true, id: id };
+    return {deleted: true, id: id};
   }
 }
