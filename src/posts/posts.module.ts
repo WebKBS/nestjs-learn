@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Posts } from './posts.entity';
 import { MetaOptions } from '../meta-options/meta-options.entity';
 import { TagsModule } from '../tags/tags.module';
+import { PaginationModule } from '../common/pagination/pagination.module';
 
 @Module({
   controllers: [PostsController],
@@ -14,6 +15,7 @@ import { TagsModule } from '../tags/tags.module';
     UsersModule,
     TagsModule,
     TypeOrmModule.forFeature([Posts, MetaOptions]),
+    PaginationModule,
   ], // UsersModule 을 import 합니다.
 })
 export class PostsModule {}

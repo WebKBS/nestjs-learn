@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TagsService } from '../../tags/providers/tags.service';
 import { PatchPostDto } from '../dto/patch-post.dto';
 import { GetPostsDto } from '../dto/get-posts.dto';
+import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
 
 @Injectable()
 export class PostsService {
@@ -23,6 +24,8 @@ export class PostsService {
     // private metaOptionsRepository: Repository<MetaOptions>,
 
     private readonly tagsService: TagsService,
+    // pagination provider 주입
+    private readonly paginationProvider: PaginationProvider,
   ) {}
 
   async create(createPostDto: CreatePostDto) {
@@ -48,11 +51,13 @@ export class PostsService {
   }
 
   async findAll(postQuery: GetPostsDto, userId: string) {
-    return await this.postsRepository.find({
-      // relations: ['author', 'metaOptions', 'tags'], // author, metaOptions, tags를 가져온다
-      take: postQuery.limit, // take 는 데이터를 가져올 개수
-      skip: postQuery.page * postQuery.limit, // skip 은 데이터를 건너뛸 개수
-    });
+    return await this.paginationProvider.paginatedQuery(
+      {
+        page: postQuery.page,
+        limit: postQuery.limit,
+      },
+      this.postsRepository,
+    );
   }
 
   public async update(patchPostDto: PatchPostDto) {
