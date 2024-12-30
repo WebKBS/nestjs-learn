@@ -10,6 +10,7 @@ import { Posts } from '../posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TagsService } from '../../tags/providers/tags.service';
 import { PatchPostDto } from '../dto/patch-post.dto';
+import { GetPostsDto } from '../dto/get-posts.dto';
 
 @Injectable()
 export class PostsService {
@@ -46,9 +47,11 @@ export class PostsService {
     return await this.postsRepository.save(post);
   }
 
-  async findAll(userId: string) {
+  async findAll(postQuery: GetPostsDto, userId: string) {
     return await this.postsRepository.find({
       // relations: ['author', 'metaOptions', 'tags'], // author, metaOptions, tags를 가져온다
+      take: postQuery.limit, // take 는 데이터를 가져올 개수
+      skip: postQuery.page * postQuery.limit, // skip 은 데이터를 건너뛸 개수
     });
   }
 

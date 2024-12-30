@@ -23,7 +23,7 @@ export class PostsController {
   @Get(':userId?')
   getPosts(@Param('userId') userId: string, @Query() postQuery: GetPostsDto) {
     console.log(postQuery);
-    return this.postsService.findAll(userId);
+    return this.postsService.findAll(postQuery, userId);
   }
 
   @ApiOperation({ summary: '게시글 생성' }) // Swagger 문서에 표시되는 요약
