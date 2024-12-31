@@ -5,7 +5,7 @@ Authorization: Bearer {{token}}
 {
   "title": "게시글 제목",
   "postType": "post",
-  "slug": "new-with-nestjs",
+  "slug": "new-with-nestjs1",
   "status": "draft",
   "content": "게시글 내용을 입력해주세요.",
   "schema": "{\"@context\": \"https://schema.org\", \"@type\": \"Person\"}",
@@ -17,6 +17,5 @@ Authorization: Bearer {{token}}
   ],
   "metaOptions": {
     "metaValue": "{\"sidebarEnabled\": \"true\"}"
-  },
-  "authorId": 1
+  }
 }

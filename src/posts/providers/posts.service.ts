@@ -1,19 +1,24 @@
-import {BadRequestException, Injectable, RequestTimeoutException,} from '@nestjs/common';
-import {UsersService} from '../../users/providers/users.service';
-import {CreatePostDto} from '../dto/create-post.dto';
-import {Repository} from 'typeorm';
-import {Posts} from '../posts.entity';
-import {InjectRepository} from '@nestjs/typeorm';
-import {TagsService} from '../../tags/providers/tags.service';
-import {PatchPostDto} from '../dto/patch-post.dto';
-import {GetPostsDto} from '../dto/get-posts.dto';
-import {PaginationProvider} from '../../common/pagination/providers/pagination.provider';
-import {Paginated} from "../../common/pagination/interfaces/paginated.interface";
+import {
+  BadRequestException,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
+import { CreatePostDto } from '../dto/create-post.dto';
+import { Repository } from 'typeorm';
+import { Posts } from '../posts.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TagsService } from '../../tags/providers/tags.service';
+import { PatchPostDto } from '../dto/patch-post.dto';
+import { GetPostsDto } from '../dto/get-posts.dto';
+import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
+import { Paginated } from '../../common/pagination/interfaces/paginated.interface';
+import { CreatePostProvider } from './create-post.provider';
+import { ActiveUserData } from '../../auth/interfaces/active-user-data.interface';
 
 @Injectable()
 export class PostsService {
   constructor(
-    private readonly usersService: UsersService,
+    // private readonly usersService: UsersService,
     // TypeORM Repository를 주입합니다.
     @InjectRepository(Posts)
     private postsRepository: Repository<Posts>,
@@ -23,32 +28,18 @@ export class PostsService {
     private readonly tagsService: TagsService,
     // pagination provider 주입
     private readonly paginationProvider: PaginationProvider,
-  ) {
+    // inject create post provider
+    private readonly createPostProvider: CreatePostProvider,
+  ) {}
+
+  async create(createPostDto: CreatePostDto, user: ActiveUserData) {
+    return await this.createPostProvider.create(createPostDto, user);
   }
 
-  async create(createPostDto: CreatePostDto) {
-    //userId를 기반으로 데이터베이스에서 작성자 찾기
-    let author = await this.usersService.findOneById(createPostDto.authorId);
-
-    // tags를 기반으로 데이터베이스에서 태그 찾기
-    let tags = await this.tagsService.findMultipleTags(createPostDto.tags);
-
-    // 작성자가 없으면 에러 발생
-    if (!author) {
-      throw new Error('작성자를 찾을 수 없습니다.');
-    }
-
-    // post 생성 - cascade 설정으로 metaOptions 도 같이 생성된다
-    let post = this.postsRepository.create({
-      ...createPostDto,
-      author: author,
-      tags: tags,
-    });
-
-    return await this.postsRepository.save(post);
-  }
-
-  async findAll(postQuery: GetPostsDto, userId: string): Promise<Paginated<Posts>> {
+  async findAll(
+    postQuery: GetPostsDto,
+    userId: string,
+  ): Promise<Paginated<Posts>> {
     return await this.paginationProvider.paginatedQuery(
       {
         page: postQuery.page,
@@ -119,6 +110,6 @@ export class PostsService {
     // // metaOptions 삭제
     // await this.metaOptionsRepository.delete(post.metaOptions.id);
 
-    return {deleted: true, id: id};
+    return { deleted: true, id: id };
   }
 }

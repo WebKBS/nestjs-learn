@@ -116,14 +116,4 @@ export class CreatePostDto {
   @ValidateNested({ each: true }) // each 옵션을 사용하여 배열의 각 요소가 객체인지 검증
   @Type(() => CreatePostMetaOptionsDto) // class-transformer 를 사용하여 객체로 변환
   metaOptions: CreatePostMetaOptionsDto | null;
-
-  @ApiProperty({
-    type: 'integer',
-    required: true,
-    description: '게시글 작성자 ID',
-    example: 1,
-  })
-  @IsInt()
-  @IsNotEmpty()
-  authorId: number;
 }
