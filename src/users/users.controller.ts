@@ -8,7 +8,6 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUsersParamDto } from './dto/get-users-param.dto';
@@ -22,7 +21,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateManyUsersDto } from './dto/create-many-users.dto';
-import { AccessTokenGuard } from '../auth/guards/access-token/access-token.guard';
 import { Auth } from '../auth/decorator/auth.decorator';
 import { AuthType } from '../auth/enums/auth-type.enum';
 
@@ -89,7 +87,6 @@ export class UsersController {
     return this.usersService.createUser(createUserDto); // 사용자 생성
   }
 
-  @UseGuards(AccessTokenGuard) // AccessTokenGuard 가 사용됨
   @Post('create-many')
   @ApiOperation({ summary: '여러 사용자 생성' })
   @ApiResponse({

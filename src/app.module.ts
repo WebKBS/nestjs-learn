@@ -16,6 +16,7 @@ import jwtConfig from './auth/config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
+import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 
 const ENV = process.env.NODE_ENV;
 console.log(ENV);
@@ -72,8 +73,9 @@ console.log(ENV);
       // 이를 사용하지 않으면 각 컨트롤러나 핸들러에서 @UseGuards() 데코레이터를 사용해야 합니다.
       // 주의 점은 APP_GUARD 는 전역으로 사용되기 때문에 App 모듈에서 설정해야 합니다.
       provide: APP_GUARD,
-      useClass: AccessTokenGuard,
+      useClass: AuthenticationGuard, // APP_GUARD 에 AuthenticationGuard 를 사용합니다.
     },
+    AccessTokenGuard, // 반드시 AccessTokenGuard 를 providers 에 추가해야 합니다.
   ],
 })
 export class AppModule {}
