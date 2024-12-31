@@ -3,11 +3,18 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './providers/auth.service';
 import { UsersModule } from '../users/users.module';
 import { BcryptProvider } from './providers/bcrypt.provider';
+import { HashingProvider } from './providers/hashing.provider';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, BcryptProvider],
+  providers: [
+    AuthService,
+    {
+      provide: HashingProvider, // HashingProvider 프로바이더를 AuthService 에 주입합니다.
+      useClass: BcryptProvider, // BcryptProvider 클래스를 HashingProvider 프로바이더로 사용합니다.
+    },
+  ],
   imports: [forwardRef(() => UsersModule)], // forwardRef() 함수를 사용하여 순환 참조를 해결합니다.
-  exports: [AuthService],
+  exports: [AuthService, HashingProvider], // AuthService 와 HashingProvider 를 외부로 노출합니다.
 })
 export class AuthModule {}
