@@ -12,6 +12,10 @@ import { PaginationModule } from './common/pagination/pagination.module';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import environmentValidation from './config/environment.validation';
+import jwtConfig from './auth/config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
 
 const ENV = process.env.NODE_ENV;
 console.log(ENV);
@@ -53,8 +57,23 @@ console.log(ENV);
     TagsModule,
     MetaOptionsModule,
     PaginationModule,
+
+    // 인증 모듈
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // 인증 provider
+    {
+      // APP_GUARD 토큰을 사용하여 AccessTokenGuard 가 사용되도록 설정합니다.
+      // 이는 모든 요청에 대해 AccessTokenGuard 가 실행되도록 합니다.
+      // 이를 사용하지 않으면 각 컨트롤러나 핸들러에서 @UseGuards() 데코레이터를 사용해야 합니다.
+      // 주의 점은 APP_GUARD 는 전역으로 사용되기 때문에 App 모듈에서 설정해야 합니다.
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
+    },
+  ],
 })
 export class AppModule {}
