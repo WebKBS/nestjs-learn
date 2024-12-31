@@ -23,6 +23,8 @@ import {
 } from '@nestjs/swagger';
 import { CreateManyUsersDto } from './dto/create-many-users.dto';
 import { AccessTokenGuard } from '../auth/guards/access-token/access-token.guard';
+import { Auth } from '../auth/decorator/auth.decorator';
+import { AuthType } from '../auth/enums/auth-type.enum';
 
 @Controller('users')
 @ApiTags('사용자 API')
@@ -64,6 +66,8 @@ export class UsersController {
   }
 
   @Post()
+  // @SetMetadata('authType', 'none') // 메타데이터 설정
+  @Auth(AuthType.None) // 커스텀 데코레이터 사용
   @ApiOperation({ summary: '사용자 생성' })
   @ApiResponse({
     status: 201,
