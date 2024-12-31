@@ -60,7 +60,7 @@ export class SignInProvider {
       },
     );
 
-    console.log(accessToken);
+    // console.log(accessToken);
 
     return {
       accessToken,
