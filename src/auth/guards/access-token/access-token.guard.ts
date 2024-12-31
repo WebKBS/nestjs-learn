@@ -34,6 +34,7 @@ export class AccessTokenGuard implements CanActivate {
     }
 
     try {
+      // 토큰을 검증하고 페이로드를 추출합니다.
       const payload = await this.jwtService.verifyAsync(
         token,
         this.jwtConfiguration,
@@ -48,6 +49,7 @@ export class AccessTokenGuard implements CanActivate {
     return true;
   }
 
+  // 헤더에서 토큰 추출 함수
   private extractRequestFromHeader(request: Request): string | undefined {
     const [_, token] = request.headers.authorization?.split(' ') ?? [];
     return token;
