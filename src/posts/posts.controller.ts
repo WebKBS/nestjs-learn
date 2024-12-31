@@ -14,6 +14,8 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PatchPostDto } from './dto/patch-post.dto';
 import { GetPostsDto } from './dto/get-posts.dto';
+import { ActiveUser } from '../auth/decorator/active-user.decorator';
+import { ActiveUserData } from '../auth/interfaces/active-user-data.interface';
 
 @Controller('posts')
 @ApiTags('게시글 API')
@@ -29,8 +31,13 @@ export class PostsController {
   @ApiOperation({ summary: '게시글 생성' }) // Swagger 문서에 표시되는 요약
   @ApiResponse({ status: 201, description: '게시글 생성 성공' }) // Swagger 문서에 표시되는 응답 상태 코드
   @Post()
-  createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  // @Auth(AuthType.None)
+  createPost(
+    @Body() createPostDto: CreatePostDto,
+    @ActiveUser() user: ActiveUserData,
+  ) {
+    console.log(user);
+    //return this.postsService.create(createPostDto);
   }
 
   @ApiOperation({ summary: '게시글 업데이트' }) // Swagger 문서에 표시되는 요약

@@ -4,7 +4,6 @@ import {
   IsArray,
   IsEnum,
   IsInt,
-  IsISO8601,
   IsJSON,
   IsNotEmpty,
   IsOptional,
@@ -88,7 +87,6 @@ export class CreatePostDto {
     description: '게시글의 발행일',
     example: '2021-01-01T00:00:00.000Z',
   })
-  @IsISO8601()
   @IsOptional()
   publishOn?: Date;
 

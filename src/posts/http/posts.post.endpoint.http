@@ -1,0 +1,22 @@
+POST localhost:3000/posts
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "게시글 제목",
+  "postType": "post",
+  "slug": "new-with-nestjs",
+  "status": "draft",
+  "content": "게시글 내용을 입력해주세요.",
+  "schema": "{\"@context\": \"https://schema.org\", \"@type\": \"Person\"}",
+  "featuredImageUrl": "https://example.com/featured-image.jpg",
+  "publishOn": "2024-01-20T00:00:00.000Z",
+  "tags": [
+    1,
+    2
+  ],
+  "metaOptions": {
+    "metaValue": "{\"sidebarEnabled\": \"true\"}"
+  },
+  "authorId": 1
+}

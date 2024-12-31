@@ -36,29 +36,21 @@ export class AuthenticationGuard implements CanActivate {
       context.getClass(),
     ]) ?? [AuthenticationGuard.defaultAuthType];
 
-    console.log('authTypes', authTypes);
-
     //  authTypes 에 따른 guard 가져오기
     const guards = authTypes
       .map((type: number) => this.authTypeGuardMap[type])
       .flat();
 
-    console.log('guards', guards);
-
     const error = new UnauthorizedException('인증되지 않은 사용자입니다.');
 
     // array of guards => 여러 개의 guard 를 사용할 수 있도록 설정
     for (const instance of guards) {
-      console.log('instance', instance);
-
       const canActivate = await Promise.resolve(
         instance.canActivate(context),
       ).catch((err) => {
         console.error(err);
         throw error;
       });
-
-      console.log('canActivate', canActivate);
 
       if (canActivate) {
         return true;

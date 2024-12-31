@@ -33,9 +33,6 @@ export class AccessTokenGuard implements CanActivate {
         secret: this.jwtConfiguration.secret,
       });
       request[REQUEST_USER_KEY] = payload;
-
-      // NestJS Logger 사용 권장
-      console.log('payload', payload);
     } catch {
       throw new UnauthorizedException('인증에 실패했습니다.');
     }
