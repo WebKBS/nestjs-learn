@@ -1,8 +1,13 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AccessTokenGuard } from '../access-token/access-token.guard';
 import { AuthType } from '../../enums/auth-type.enum';
+import { AUTH_TYPE_KEY } from '../../constants/auth.constants';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -24,10 +29,44 @@ export class AuthenticationGuard implements CanActivate {
     private readonly accessTokenGuard: AccessTokenGuard,
   ) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    console.log(this.authTypeGuardMap);
-    return true;
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    // AuthTypes from reflector => 메타데이터에서 AuthType 가져오기
+    const authTypes = this.reflector.getAllAndOverride(AUTH_TYPE_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]) ?? [AuthenticationGuard.defaultAuthType];
+
+    console.log('authTypes', authTypes);
+
+    //  authTypes 에 따른 guard 가져오기
+    const guards = authTypes
+      .map((type: number) => this.authTypeGuardMap[type])
+      .flat();
+
+    console.log('guards', guards);
+
+    const error = new UnauthorizedException('인증되지 않은 사용자입니다.');
+
+    // array of guards => 여러 개의 guard 를 사용할 수 있도록 설정
+    for (const instance of guards) {
+      console.log('instance', instance);
+
+      const canActivate = await Promise.resolve(
+        instance.canActivate(context),
+      ).catch((err) => {
+        console.error(err);
+        throw error;
+      });
+
+      console.log('canActivate', canActivate);
+
+      if (canActivate) {
+        return true;
+      }
+    }
+
+    // loop guards canActivate() => 모든 guard 의 canActivate() 를 실행하고 하나라도 false 가 나오면 false 반환
+
+    throw error;
   }
 }
