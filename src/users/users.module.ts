@@ -8,10 +8,16 @@ import { UsersCreateManyProvider } from './providers/users-create-many.provider'
 import { CreateUserProvider } from './providers/create-user.provider';
 import profileConfig from './config/profile.config';
 import { AuthModule } from '../auth/auth.module';
+import { FindOneUserByEmailProvider } from './providers/find-one-user-by-email.provider';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService, UsersCreateManyProvider, CreateUserProvider],
+  providers: [
+    UsersService,
+    UsersCreateManyProvider,
+    CreateUserProvider,
+    FindOneUserByEmailProvider,
+  ],
   exports: [UsersService], // 다른 모듈에서 UsersService 를 사용할 수 있도록 내보냅니다.
   imports: [
     TypeOrmModule.forFeature([Users]),
