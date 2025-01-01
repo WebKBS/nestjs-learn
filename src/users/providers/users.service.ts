@@ -18,6 +18,8 @@ import { CreateManyUsersDto } from '../dto/create-many-users.dto';
 import { CreateUserProvider } from './create-user.provider';
 import { FindOneUserByEmailProvider } from './find-one-user-by-email.provider';
 import { FindOneByGoogleIdProvider } from './find-one-by-google-id.provider';
+import { CreateGoogleUserProvider } from './create-google-user.provider';
+import { GoogleUser } from '../interfaces/google-user.inteface';
 
 @Injectable() // NestJS 에서는 @Injectable() 데코레이터를 사용하여 클래스를 서비스로 정의
 export class UsersService {
@@ -35,6 +37,8 @@ export class UsersService {
     private readonly findOneUserByEmailProvider: FindOneUserByEmailProvider,
     // FindOneByGoogleIdProvider 를 주입합니다.
     private readonly findOneByGoogleIdProvider: FindOneByGoogleIdProvider,
+    // CreateGoogleUserProvider 를 주입합니다.
+    private readonly createGoogleUserProvider: CreateGoogleUserProvider,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto): Promise<Users> {
@@ -85,5 +89,9 @@ export class UsersService {
 
   async findOneByGoogleId(googleId: string) {
     return await this.findOneByGoogleIdProvider.findOneByGoogleId(googleId);
+  }
+
+  async createGoogleUser(googleUser: GoogleUser) {
+    return await this.createGoogleUserProvider.createGoogleUser(googleUser);
   }
 }
