@@ -31,9 +31,16 @@ export class Users {
   @Column({
     type: 'varchar',
     length: 96,
-    nullable: false,
+    nullable: true,
   })
-  password: string;
+  password?: string;
+
+  @Column({
+    type: 'varchar',
+    length: 96,
+    nullable: true,
+  })
+  googleId?: string;
 
   @OneToMany(() => Posts, (post) => post.author) // Posts 엔티티와 일대다 관계를 설정한다.
   posts: Posts[];

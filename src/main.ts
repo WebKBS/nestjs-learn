@@ -28,6 +28,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document); // Swagger UI를 설정
 
+  app.enableCors(); // CORS 설정 => 다른 도메인에서 API를 호출할 수 있도록 허용
   await app.listen(process.env.PORT ?? 3000);
 }
 
