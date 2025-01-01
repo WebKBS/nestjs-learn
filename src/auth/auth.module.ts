@@ -8,6 +8,7 @@ import { SignInProvider } from './providers/sign-in.provider';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
+import { GenerateTokensProvider } from './providers/generate-tokens.provider';
 
 @Module({
   controllers: [AuthController],
@@ -18,6 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
       useClass: BcryptProvider, // BcryptProvider 클래스를 HashingProvider 프로바이더로 사용합니다.
     },
     SignInProvider,
+    GenerateTokensProvider,
   ],
   imports: [
     forwardRef(() => UsersModule), // forwardRef() 함수를 사용하여 순환 참조를 해결합니다.
