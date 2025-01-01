@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   DefaultValuePipe,
   Get,
@@ -8,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUsersParamDto } from './dto/get-users-param.dto';
@@ -81,6 +83,7 @@ export class UsersController {
       },
     },
   })
+  @UseInterceptors(ClassSerializerInterceptor) // 응답 데이터 직렬화 (User Entity 에서 설정한 Exclude 제외)
   createUsers(@Body() createUserDto: CreateUserDto) {
     // ValidationPipe 를 사용하면 request 에 대한 유효성 검사를 자동으로 수행
 
