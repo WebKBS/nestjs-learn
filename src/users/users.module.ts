@@ -9,6 +9,7 @@ import { CreateUserProvider } from './providers/create-user.provider';
 import profileConfig from './config/profile.config';
 import { AuthModule } from '../auth/auth.module';
 import { FindOneUserByEmailProvider } from './providers/find-one-user-by-email.provider';
+import { FindOneByGoogleIdProvider } from './providers/find-one-by-google-id.provider';
 
 @Module({
   controllers: [UsersController],
@@ -17,6 +18,7 @@ import { FindOneUserByEmailProvider } from './providers/find-one-user-by-email.p
     UsersCreateManyProvider,
     CreateUserProvider,
     FindOneUserByEmailProvider,
+    FindOneByGoogleIdProvider,
   ],
   exports: [UsersService], // 다른 모듈에서 UsersService 를 사용할 수 있도록 내보냅니다.
   imports: [
