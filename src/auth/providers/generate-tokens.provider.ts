@@ -30,6 +30,7 @@ export class GenerateTokensProvider {
     );
   }
 
+  // active user data 를 이용하여 access token 과 refresh token 을 발급한다.
   public async generateTokens<T>(user: Users) {
     const [accessToken, refreshToken] = await Promise.all([
       // Generate access token
