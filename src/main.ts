@@ -34,10 +34,10 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   config.update({
     credentials: {
-      accessKeyId: configService.get('appConfig.awsAccessKeyId'),
-      secretAccessKey: configService.get('appConfig.awsSecretAccessKey'),
+      accessKeyId: configService.get('app.awsAccessKeyId'),
+      secretAccessKey: configService.get('app.awsSecretAccessKey'),
     },
-    region: configService.get('appConfig.awsRegion'),
+    region: configService.get('app.awsRegion'),
   });
 
   app.enableCors(); // CORS 설정 => 다른 도메인에서 API를 호출할 수 있도록 허용

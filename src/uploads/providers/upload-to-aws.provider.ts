@@ -12,11 +12,12 @@ export class UploadToAwsProvider {
     // Upload file to AWS
     const s3 = new S3();
 
+    console.log(this.configService.get('app.awsBucketName'));
     try {
       // 파일 업로드
       const uploadResult = await s3
         .upload({
-          Bucket: this.configService.get('appConfig.awsBucketName'),
+          Bucket: this.configService.get('app.awsBucketName'),
           Body: file.buffer,
           Key: this.generateFileName(file),
           ContentType: file.mimetype,
@@ -25,6 +26,7 @@ export class UploadToAwsProvider {
 
       return uploadResult.Key;
     } catch (error) {
+      console.error(error);
       throw new RequestTimeoutException('파일 업로드에 실패했습니다.');
     }
   }
