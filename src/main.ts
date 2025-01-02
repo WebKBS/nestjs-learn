@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import { config } from 'aws-sdk';
 
 // bootstrap: 애플리케이션을 생성하고, 지정된 포트에서 애플리케이션을 실행하는 역할을 한다.
 async function bootstrap() {
@@ -18,15 +20,25 @@ async function bootstrap() {
     }),
   ); // 모든 요청에 대한 유효성 검사를 수행
 
-  const config = new DocumentBuilder()
+  const swaggerConfig = new DocumentBuilder()
     .setVersion('1.0') // API 문서의 버전
     .setTitle('NestJS API') // API 문서의 제목
     .setDescription('NestJS API 문서입니다.') // API 문서의 설명
     .addServer('http://localhost:3000') // API 서버의 주소
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document); // Swagger UI를 설정
+
+  // AWS SDK 설정
+  const configService = app.get(ConfigService);
+  config.update({
+    credentials: {
+      accessKeyId: configService.get('appConfig.awsAccessKeyId'),
+      secretAccessKey: configService.get('appConfig.awsSecretAccessKey'),
+    },
+    region: configService.get('appConfig.awsRegion'),
+  });
 
   app.enableCors(); // CORS 설정 => 다른 도메인에서 API를 호출할 수 있도록 허용
   // app.useGlobalInterceptors(new DataResponseInterceptor()); // 모든 요청에 대한 인터셉터를 사용
