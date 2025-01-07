@@ -10,6 +10,7 @@ import { Users } from '../user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HashingProvider } from '../../auth/providers/hashing.provider';
+import { MailService } from '../../mail/providers/mail.service';
 
 @Injectable()
 export class CreateUserProvider {
@@ -18,6 +19,7 @@ export class CreateUserProvider {
     private readonly usersRepository: Repository<Users>,
     @Inject(forwardRef(() => HashingProvider)) // HashingProvider 프로바이더를 주입합니다.
     private readonly hashingProvider: HashingProvider,
+    private readonly mailService: MailService,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto): Promise<Users> {
@@ -56,6 +58,17 @@ export class CreateUserProvider {
         description: '요청 시간이 초과되었습니다.',
       });
     }
+
+    // 사용자 생성 후 이메일 전송
+    try {
+      await this.mailService.sendUserWelcome(newUser);
+    } catch (error) {
+      console.error(error);
+      throw new RequestTimeoutException(error, {
+        description: '이메일 전송 요청 시간이 초과되었습니다.',
+      });
+    }
+
     return newUser;
   }
 }
