@@ -11,7 +11,6 @@ import { Repository } from 'typeorm';
 import { Users } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
 import { UsersCreateManyProvider } from './users-create-many.provider';
 import { CreateManyUsersDto } from '../dto/create-many-users.dto';
@@ -28,9 +27,8 @@ export class UsersService {
     private usersRepository: Repository<Users>, // User 엔티티의 리포지토리를 주입
 
     @Inject(profileConfig.KEY)
-    private readonly profileConfiguration: ConfigType<typeof profileConfig>,
+    // private readonly profileConfiguration: ConfigType<typeof profileConfig>,
     // Inject Datasource
-
     private readonly usersCreateManyProvider: UsersCreateManyProvider,
     private readonly createUserProvider: CreateUserProvider,
     // FindOneUserByEmailProvider 를 주입합니다.
